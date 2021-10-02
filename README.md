@@ -25,22 +25,21 @@ go get github.com/a-poor/tags
 ## Example
 
 ```go
+// Define a struct that we'll be getting the tags from
 user := struct {
-    ID    int    `app:"user_id"`
-    Name  string `app:",omitempty"`
-    Email string `app:"user_email,omitempty"`
-    NotMe bool
-    ImEmpty  bool `app:""`
-}{
-    123,
-    "Fake Name",
-    "fake@example.com",
-    false,
-    true,
-}
+    ID      int    `app:"user_id"`
+    Name    string `app:",omitempty"`
+    Email   string `app:"user_email,omitempty"`
+    NotMe   bool
+    ImEmpty bool `app:""`
+}{}
 
+// Parse the struct's tags
 fields := tags.ParseStructTags("app", user)
-fmt.Println(fields)
-// Output: map[Email:[user_email omitempty] ID:[user_id] ImEmpty:[] Name:[ omitempty]]
+
+// Print out the results as JSON
+data, _ := json.Marshal(fields)
+fmt.Println(string(data))
+// Output: {"Email":["user_email","omitempty"],"ID":["user_id"],"ImEmpty":[""],"Name":["","omitempty"]}
 ```
 
