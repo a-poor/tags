@@ -1,29 +1,51 @@
-package main
+package tags
 
 import (
-	"fmt"
 	"reflect"
+	"strings"
 )
 
-type User struct {
-	ID          int     `csv:"user_id"`
-	FirstName   string  `csv:"first_name"`
-	LastName    string  `csv:"last_name,omitempty"`
-	CoolnessPct float32 `csv:"coolness_pct"`
-	IsCool      bool    `csv:"is_cool"`
+// ParseStructTags parses a struct's tags and returns
+// a map of the struct's fields to an array of the tag values.
+//
+// This is a convenience function that creates a new `TagParse`
+// instance and calles its `Parse` method.
+func ParseStructTags(tagName string, d interface{}) map[string][]string {
+	return TagParser{TagName: tagName}.Parse(d)
 }
 
-func main() {
-	u := User{1, "Tim", "Tomson", 0.9, true}
-	fmt.Printf("%+v\n", u)
+// TagParser is a struct used for parsing struct tags
+// with the key `TagName`.
+type TagParser struct {
+	TagName string
+}
 
-	ut := reflect.TypeOf(u)
-	fmt.Printf("%+v\n", ut)
-	for i := 0; i < ut.NumField(); i++ {
-		field := ut.Field(i)
-		fmt.Printf("[%d] %15q => %q\n", i, field.Name, field.Tag)
-		csv, ok := field.Tag.Lookup("csv")
-		fmt.Printf("csv set: %t   csv value: %q\n", ok, csv)
-		fmt.Println()
+// Parse parses the struct tags of of the given struct
+//
+func (p TagParser) Parse(d interface{}) map[string][]string {
+	// Map to store the struct tags
+	var st map[string][]string
+
+	// Get the type of the struct
+	dt := reflect.TypeOf(d)
+
+	// Get the number of (visible) fields in the struct
+	n := dt.NumField()
+	if n > 0 {
+		st = make(map[string][]string)
 	}
+
+	// Iterate through the fields
+	for i := 0; i < n; i++ {
+		field := dt.Field(i)
+
+		val, ok := field.Tag.Lookup(p.TagName)
+		if ok {
+			// Split the tag into its parts and store
+			st[field.Name] = strings.Split(val, ",")
+		}
+
+	}
+
+	return st
 }
