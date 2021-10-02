@@ -1,6 +1,8 @@
 package tags_test
 
 import (
+	"encoding/json"
+	"fmt"
 	"testing"
 
 	"github.com/a-poor/tags"
@@ -100,4 +102,38 @@ func TestTagParser(t *testing.T) {
 		}
 	}
 
+}
+
+func ExampleTagParser() {
+	// Define a struct that we'll be getting the tags from
+	user := struct {
+		ID      int    `app:"user_id"`
+		Name    string `app:",omitempty"`
+		Email   string `app:"user_email,omitempty"`
+		NotMe   bool
+		ImEmpty bool `app:""`
+	}{}
+
+	// Parse the struct's tags
+	fields := tags.ParseStructTags("app", user)
+
+	// Print out the results as JSON
+	data, _ := json.MarshalIndent(fields, "", "  ")
+	fmt.Println(string(data))
+	// Output: {
+	//   "Email": [
+	//     "user_email",
+	//     "omitempty"
+	//   ],
+	//   "ID": [
+	//     "user_id"
+	//   ],
+	//   "ImEmpty": [
+	//     ""
+	//   ],
+	//   "Name": [
+	//     "",
+	//     "omitempty"
+	//   ]
+	// }
 }

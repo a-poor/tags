@@ -17,12 +17,14 @@ func ParseStructTags(tagName string, d interface{}) map[string][]string {
 // TagParser is a struct used for parsing struct tags
 // with the key `TagName`.
 type TagParser struct {
-	TagName string
+	TagName string // They key to look for in the struct tags
 }
 
 // Parse parses the struct tags of of the given struct
 // and returns a map from the struct's fields to an array
 // of the tag values.
+//
+// Note: `d` is expected to be passed by value, not by reference.
 func (p TagParser) Parse(d interface{}) map[string][]string {
 	// Map to store the struct tags
 	var st map[string][]string
