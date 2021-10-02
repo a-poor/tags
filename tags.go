@@ -21,7 +21,8 @@ type TagParser struct {
 }
 
 // Parse parses the struct tags of of the given struct
-//
+// and returns a map from the struct's fields to an array
+// of the tag values.
 func (p TagParser) Parse(d interface{}) map[string][]string {
 	// Map to store the struct tags
 	var st map[string][]string
@@ -47,5 +48,6 @@ func (p TagParser) Parse(d interface{}) map[string][]string {
 
 	}
 
+	// Return the results map
 	return st
 }
