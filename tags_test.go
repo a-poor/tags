@@ -22,7 +22,7 @@ func TestTagParser(t *testing.T) {
 		ID        int     `test:"user_id"`
 		FirstName string  `test:"first_name" json:"not_me"`
 		LastName  string  `test:"last_name,omitempty"`
-		hidden    string  `test:"hidden"`
+		notHidden string  `test:"not_hidden"`
 		ANumber   float32 `test:""`
 		IsCool    bool
 	}{
@@ -59,9 +59,9 @@ func TestTagParser(t *testing.T) {
 			[]string{"last_name", "omitempty"},
 		},
 		{
-			"hidden",
-			false,
-			[]string{"hidden"},
+			"notHidden",
+			true,
+			[]string{"not_hidden"},
 		},
 		{
 			"ANumber",
